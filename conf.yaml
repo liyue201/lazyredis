@@ -1,0 +1,5 @@
+redis:
+  addr:
+    - 10.50.0.180:15011
+  password: Lclclc123
+  db: 21
