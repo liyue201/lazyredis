@@ -32,11 +32,7 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 
 	g.SetCurrentView(curView.Name())
 	g.SetViewOnTop(curView.Name())
-	if curView.Name() == "side" {
-		g.Cursor = true
-	} else {
-		g.Cursor = false
-	}
+
 	jlog.Logger.Infof("cur view: %s", curView.Name())
 	return nil
 }
@@ -57,13 +53,19 @@ func IgnoreKey(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
-func getLine(g *gocui.Gui, v *gocui.View) error {
+func exec(g *gocui.Gui, v *gocui.View) error {
 	var line string
 	var err error
 
 	defer func() {
-		_, y := v.Cursor()
-		v.SetCursor(0, y+1)
+		_, cy := v.Cursor()
+		if err := v.SetCursor(0, cy+1); err != nil {
+			_, oy := v.Origin()
+			if err := v.SetOrigin(0, oy+1); err != nil {
+				return
+			}
+			v.SetCursor(0, cy)
+		}
 		newLine(v)
 	}()
 
@@ -78,6 +80,9 @@ func getLine(g *gocui.Gui, v *gocui.View) error {
 	splits := strings.Split(line, ">")
 	if len(splits) > 1 {
 		cmd = splits[1]
+	}
+	if cmd == "" {
+		return nil
 	}
 
 	retStr := ""
@@ -111,12 +116,38 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
 
+func cursorDown(g *gocui.Gui, v *gocui.View) error {
+	if v != nil {
+		cx, cy := v.Cursor()
+		if err := v.SetCursor(cx, cy+1); err != nil {
+			ox, oy := v.Origin()
+			if err := v.SetOrigin(ox, oy+1); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func cursorUp(g *gocui.Gui, v *gocui.View) error {
+	if v != nil {
+		ox, oy := v.Origin()
+		cx, cy := v.Cursor()
+		if err := v.SetCursor(cx, cy-1); err != nil && oy > 0 {
+			if err := v.SetOrigin(ox, oy-1); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("", gocui.KeyTab, gocui.ModNone, nextView); err != nil {
 		log.Panicln(err)
 	}
 
-	if err := g.SetKeybinding("side", gocui.KeyEnter, gocui.ModNone, getLine); err != nil {
+	if err := g.SetKeybinding("side", gocui.KeyEnter, gocui.ModNone, exec); err != nil {
 		return err
 	}
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
@@ -126,6 +157,14 @@ func keybindings(g *gocui.Gui) error {
 	keys := []gocui.Key{gocui.KeyArrowLeft, gocui.KeyArrowDown, gocui.KeyArrowRight, gocui.KeyArrowUp, gocui.KeyDelete, gocui.KeyBackspace2}
 	for _, key := range keys {
 		g.SetKeybinding("side", key, gocui.ModNone, IgnoreKey);
+	}
+
+	if err := g.SetKeybinding("main", gocui.KeyArrowDown, gocui.ModNone, cursorDown); err != nil {
+		return err
+	}
+
+	if err := g.SetKeybinding("main", gocui.KeyArrowUp, gocui.ModNone, cursorUp); err != nil {
+		return err
 	}
 
 	return nil
@@ -139,7 +178,6 @@ func layout(g *gocui.Gui) error {
 		}
 		v.Title = "cmd"
 		v.Editable = true
-		v.Autoscroll = true
 		newLine(v)
 
 		if _, err = g.SetCurrentView("side"); err != nil {
@@ -151,7 +189,6 @@ func layout(g *gocui.Gui) error {
 			return err
 		}
 		v.Wrap = true
-		v.Autoscroll = true
 		v.Title = "output"
 	}
 	return nil
