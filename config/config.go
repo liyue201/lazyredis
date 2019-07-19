@@ -3,7 +3,7 @@ package config
 import "github.com/jinzhu/configor"
 
 const DefaultConfigFile = "conf.yml"
-
+ 
 type (
 	RedisConfig struct {
 		Addr     []string `yaml:"addr"`
@@ -16,8 +16,9 @@ type (
 	}
 )
 
+var Conf AppConfig
+
 func Load(path string) (*AppConfig, error) {
-	conf := &AppConfig{}
-	err := configor.Load(conf, path)
-	return  conf, err
+	err := configor.Load(&Conf, path)
+	return &Conf, err
 }

@@ -1,0 +1,61 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "rcoUTEGR7KVr963l6P1rlMaYCzA=",
+			"path": "github.com/BurntSushi/toml",
+			"revision": "3012a1dbe2e4bd1391d42b32f0577cb7bbc7f005",
+			"revisionTime": "2018-08-15T10:47:33Z"
+		},
+		{
+			"checksumSHA1": "6X3O3mfvOyiwV2iAb5GjxARs08c=",
+			"path": "github.com/garyburd/redigo/internal",
+			"revision": "569eae59ada904ea8db7a225c2b47165af08735a",
+			"revisionTime": "2018-04-04T16:07:26Z"
+		},
+		{
+			"checksumSHA1": "TRsWhl8gX4p8xoErljH/oyNmY5M=",
+			"path": "github.com/garyburd/redigo/redis",
+			"revision": "569eae59ada904ea8db7a225c2b47165af08735a",
+			"revisionTime": "2018-04-04T16:07:26Z"
+		},
+		{
+			"checksumSHA1": "VNfjqXslphqEz06cae7eLV+r7dI=",
+			"path": "github.com/jinzhu/configor",
+			"revision": "4edaf76fe18865e36de734d887f4c01bd05707af",
+			"revisionTime": "2018-06-14T02:44:15Z"
+		},
+		{
+			"checksumSHA1": "ZUSmRRRWHR5TuU8ji0+x/guIGGw=",
+			"path": "github.com/jroimartin/gocui",
+			"revision": "c055c87ae801372cd74a0839b972db4f7697ae5f",
+			"revisionTime": "2018-04-11T15:50:10Z"
+		},
+		{
+			"checksumSHA1": "pXGkKptkpqusf7/ALDaZVJGSpJg=",
+			"path": "github.com/mattn/go-runewidth",
+			"revision": "703b5e6b11ae25aeb2af9ebb5d5fdf8fa2575211",
+			"revisionTime": "2018-12-18T00:06:49Z"
+		},
+		{
+			"checksumSHA1": "P+gTDDaUGn6I+Y3ZzRR52xSENVg=",
+			"path": "github.com/nsf/termbox-go",
+			"revision": "eeb6cd0a176293eeb2c69270d83835972e3567bc",
+			"revisionTime": "2019-06-24T07:25:49Z"
+		},
+		{
+			"checksumSHA1": "B7X1DQkP/pDh/fAG3BAlOEScDi4=",
+			"path": "github.com/wuxibin89/redis-go-cluster",
+			"revision": "222d81891f1d3fa7cf8b5655020352c3e5b4ec0f",
+			"revisionTime": "2016-12-07T02:39:22Z"
+		},
+		{
+			"checksumSHA1": "oNqPrS2edE8peI3ah2INe379k8E=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "51d6538a90f86fe93ac480b35f37b2be17fef232",
+			"revisionTime": "2018-11-15T11:05:04Z"
+		}
+	],
+	"rootPath": "github.com/liyue201/lazyredis"
+}
