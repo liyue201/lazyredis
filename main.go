@@ -5,18 +5,38 @@
 package main
 
 import (
+	"flag"
+	"strings"
+
 	"github.com/liyue201/lazyredis/config"
 	"github.com/liyue201/lazyredis/gui"
 	"github.com/liyue201/lazyredis/redis"
 )
- 
+
+var (
+	addr    = flag.String("addr", "localhost:6379", "redis address")
+	pass    = flag.String("pass", "", "redis password")
+	db      = flag.Int("db", 0, "redis database")
+	cfgFile = flag.String("conf", "", "yaml config file")
+)
+
 func main() {
-	conf, err := config.Load("conf.yaml")
-	if err != nil {
-		panic(err.Error())
-		return
+	flag.Parse()
+
+	redisAddrs := strings.Split(*addr, ",")
+
+	if *cfgFile != "" {
+		conf, err := config.Load(*cfgFile)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		redisAddrs = conf.Redis.Addr
+		*pass = conf.Redis.Password
+		*db = conf.Redis.Db
 	}
-	redisCli, err := redis.NewRedisClient(conf.Redis.Addr, conf.Redis.Password, conf.Redis.Db)
+
+	redisCli, err := redis.NewRedisClient(redisAddrs, *pass, *db)
 	if err != nil {
 		panic(err.Error())
 	}
